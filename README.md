@@ -67,10 +67,10 @@ We don't build an app. We build a **Decision Engine** accessible via **2G**.
 
 | Name | Role | Hack2Skill ID / Reg ID |
 | :--- | :--- | :--- |
-| **Asik Kani** | Lead Architect | [Your ID Here] |
-| **[Teammate 1 Name]** | [Role] | [ID Here] |
-| **[Teammate 2 Name]** | [Role] | [ID Here] |
-| **[Teammate 3 Name]** | [Role] | [ID Here] |
+| **Asik Kani** | Lead Architect | ASIKKANI |
+| **Kruthi GR** | Front-end  | Kruthi GR |
+| **Bharani dharan** | backend | bharani dharan.R |
+
 
 ---
 
