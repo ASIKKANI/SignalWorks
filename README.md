@@ -6,9 +6,13 @@
 [![Stack](https://img.shields.io/badge/Tech-Bedrock%20%7C%20SageMaker%20%7C%20Pinpoint-blue?style=for-the-badge&logo=python)]()
 [![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)]()
 
+https://github.com/user-attachments/assets/4e68f47f-5477-4195-928e-c792b4aaec3a
+
+
+
 > **"A ₹1,000 feature phone that tells a vegetable vendor exactly *where* and *when* to sell."**
 
-<video src="https://github.com/ASIKKANI/assest/blob/main/Video_Generation_Request_Fulfilled.mp4" width="100%" controls autoplay loop muted></video>
+<video src="https://github.com/user-attachments/assets/4e68f47f-5477-4195-928e-c792b4aaec3a" width="100%" controls autoplay loop muted></video>
 
 ---
 
