@@ -6,7 +6,7 @@
 [![Stack](https://img.shields.io/badge/Tech-Bedrock%20%7C%20SageMaker%20%7C%20Pinpoint-blue?style=for-the-badge&logo=python)]()
 [![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)]()
 
-https://github.com/user-attachments/assets/4e68f47f-5477-4195-928e-c792b4aaec3a
+
 
 
 
