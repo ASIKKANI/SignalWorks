@@ -8,6 +8,8 @@
 
 > **"A ₹1,000 feature phone that tells a vegetable vendor exactly *where* and *when* to sell."**
 
+<video src="https://github.com/ASIKKANI/assest/blob/main/Video_Generation_Request_Fulfilled.mp4" width="100%" controls autoplay loop muted></video>
+
 ---
 
 ## 📂 Submission Documents
