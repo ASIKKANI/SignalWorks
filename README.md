@@ -44,7 +44,7 @@ We don't build an app. We build a **Decision Engine** accessible via **2G**.
 ## 🏗️ Architecture
 **Event-Driven Serverless Architecture on AWS**
 
-![Architecture Diagram]<img width="1218" height="610" alt="architecture" src="https://github.com/user-attachments/assets/767841cb-8f1f-4f41-b5f9-6b8d52cd4278" />
+Architecture Diagram<img width="1218" height="610" alt="architecture" src="https://github.com/user-attachments/assets/767841cb-8f1f-4f41-b5f9-6b8d52cd4278" />
 
 
 * **Intelligence:** Amazon Bedrock (Reasoning) + SageMaker Canvas (Forecasting).
@@ -64,7 +64,7 @@ We don't build an app. We build a **Decision Engine** accessible via **2G**.
 
 ---
 
-## 👥 Team: [Your Team Name]
+## 👥 Team: Radioheads
 
 | Name | Role | Hack2Skill ID / Reg ID |
 | :--- | :--- | :--- |
