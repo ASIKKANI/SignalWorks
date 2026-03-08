@@ -9,7 +9,7 @@ from shared.constants import BEDROCK_MODEL_ID, DATA_LAKE_BUCKET
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-bedrock = boto3.client(service_name='bedrock-runtime', region_name='us-east-1') # Bedrock is often in us-east-1
+bedrock = boto3.client(service_name='bedrock-runtime', region_name='ap-south-2')
 s3 = boto3.client('s3')
 
 def generate_insights(city_data):

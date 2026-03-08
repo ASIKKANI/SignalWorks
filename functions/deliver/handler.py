@@ -13,12 +13,12 @@ logger.setLevel(logging.INFO)
 # Initialize Twilio Client
 twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-translate = boto3.client('translate', region_name='us-east-1')
+translate = boto3.client('translate', region_name='ap-south-2')
 s3 = boto3.client('s3')
 
 # Mock Vendor Data
 MOCK_VENDORS = [
-    {"id": "V001", "name": "Bharani", "city": "Chennai", "area": "Kelambakkam", "phone": "+919345588995", "lang": "Tamil"}
+    {"id": "V001", "name": "Bharani", "city": "Chennai", "area": "Kelambakkam", "phone": "+918681980569", "lang": "English"}
 ]
 
 def translate_message(text, target_lang_name):

@@ -98,8 +98,8 @@ def lambda_handler(event, context):
         predictions = []
         for city_item in ingested_data['data']:
             city = city_item['city']
-            weather_score = city_item['weather'].get('rain_probability', 0)
-            traffic_score = city_item['traffic'].get('congestion_index', 0)
+            weather_score = (city_item['weather'] or {}).get('rain_probability', 0)
+            traffic_score = (city_item['traffic'] or {}).get('congestion_index', 0)
             
             city_preds = {"city": city, "commodities": []}
             
