@@ -18,32 +18,63 @@ ENDPOINT_NAME = os.environ.get('SAGEMAKER_ENDPOINT', 'signalworks-price-predicto
 def get_fair_price_prediction(commodity, mandi_price, weather_score, traffic_score):
     """
     Predicts today's fair retail price and forecasts tomorrow's mandi price trend.
+    Attempts to use Amazon SageMaker ML endpoint, using rule-based math as a fallback.
     """
     mandi_price = float(mandi_price)
     
-    # 1. Today's Fair Retail Price Calculation
-    base_margin = 1.25 # 25% profit
-    weather_multiplier = 1 + (weather_score * 0.15)
-    traffic_multiplier = 1 + (traffic_score * 0.08)
-    today_fair_price = (mandi_price / 100) * base_margin * weather_multiplier * traffic_multiplier
-    
-    # 2. Tomorrow's Mandi Forecast (ML Logic)
-    # In a real DeepAR model, this would use historical data. 
-    # Here we simulate the trend based on weather/seasonality.
-    # If rain is coming tomorrow (weather_score > 0.5), price likely goes up.
-    trend = 1.0
-    if weather_score > 0.4:
-        trend = 1.12 # 12% increase expected due to supply disruption
-    elif weather_score < 0.1:
-        trend = 0.95 # 5% decrease expected (oversupply)
+    try:
+        # 1. Attempt SageMaker ML Prediction
+        # Note: Boto3 is pre-configured with the endpoint 'signalworks-price-predictor'
+        payload = {
+            "instances": [
+                {
+                    "features": [commodity, mandi_price, weather_score, traffic_score]
+                }
+            ]
+        }
         
-    tomorrow_mandi_forecast = mandi_price * trend
-    
-    return {
-        "today_retail_price": round(today_fair_price, 2),
-        "tomorrow_mandi_forecast": round(tomorrow_mandi_forecast, 2),
-        "trend": "UP 📈" if trend > 1 else "DOWN 📉" if trend < 1 else "STABLE ➖"
-    }
+        response = sagemaker.invoke_endpoint(
+            EndpointName=ENDPOINT_NAME,
+            ContentType='application/json',
+            Body=json.dumps(payload)
+        )
+        
+        result = json.loads(response['Body'].read().decode('utf-8'))
+        
+        ml_today_price = result['predictions'][0]['today_retail_price']
+        ml_tomorrow_forecast = result['predictions'][0]['tomorrow_mandi_forecast']
+        ml_trend_ratio = ml_tomorrow_forecast / mandi_price if mandi_price > 0 else 1.0
+        
+        return {
+            "today_retail_price": round(ml_today_price, 2),
+            "tomorrow_mandi_forecast": round(ml_tomorrow_forecast, 2),
+            "trend": "UP 📈" if ml_trend_ratio > 1.05 else "DOWN 📉" if ml_trend_ratio < 0.95 else "STABLE ➖",
+            "source": "sagemaker"
+        }
+        
+    except Exception as e:
+        # 2. Fallback Rule-Based Math (If Endpoint doesn't exist yet in dev)
+        # 25% profit margin based on conditions
+        base_margin = 1.25
+        weather_multiplier = 1 + (weather_score * 0.15)
+        traffic_multiplier = 1 + (traffic_score * 0.08)
+        today_fair_price = (mandi_price / 100) * base_margin * weather_multiplier * traffic_multiplier
+        
+        # Tomorrow's Forecast Simulation
+        trend = 1.0
+        if weather_score > 0.4:
+            trend = 1.12 # 12% increase expected due to supply disruption (rain)
+        elif weather_score < 0.1:
+            trend = 0.95 # 5% decrease expected (oversupply)
+            
+        tomorrow_mandi_forecast = mandi_price * trend
+        
+        return {
+            "today_retail_price": round(today_fair_price, 2),
+            "tomorrow_mandi_forecast": round(tomorrow_mandi_forecast, 2),
+            "trend": "UP 📈" if trend > 1 else "DOWN 📉" if trend < 1 else "STABLE ➖",
+            "source": "fallback-math"
+        }
 
 def lambda_handler(event, context):
     """

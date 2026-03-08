@@ -82,10 +82,10 @@ def fetch_traffic(city):
                     "travel_time_min": traffic_sec // 60,
                     "delay_min": (traffic_sec - normal_sec) // 60
                 }
-        return {"congestion_index": 0.5, "note": "API fallback"}
+        return None
     except Exception as e:
         logger.error(f"Traffic API failed for {city}: {str(e)}")
-        return {"congestion_index": 0.3, "error": str(e)}
+        return None
 
 def fetch_mandi_prices(city):
     """
@@ -129,32 +129,33 @@ def fetch_mandi_prices(city):
                             "state": "Tamil Nadu"
                         })
         
-        # Provide real TN sample data if the site is slow/down
-        if not prices and city == "Chennai":
-            prices = [
-                {"commodity": "Onion (Big)", "modal_price": "2400", "market": "Koyambedu"},
-                {"commodity": "Tomato", "modal_price": "1800", "market": "Koyambedu"},
-                {"commodity": "Small Onion", "modal_price": "4500", "market": "Koyambedu"}
-            ]
-            
         return prices
     except Exception as e:
         logger.error(f"Mandi scraping failed: {str(e)}")
-        return [{"commodity": "Tomato", "modal_price": "2000"}]
+        return []
 
 def fetch_city_events(city):
     """
-    Scrapes or fetches city event calendars.
+    Scrapes real events from Google News RSS for the specific city.
     """
-    logger.info(f"Fetching events for {city}")
-    # In a real scenario, this would scrape TOI or similar local portals
+    logger.info(f"Fetching real events for {city} via Google News")
     try:
-        if city == "Mumbai":
-            return [
-                {"event": "IPL Cricket Match", "location": "Wankhede Stadium", "time": "7:30 PM"},
-                {"event": "Art Exhibition", "location": "Jehangir Gallery", "time": "11:00 AM"}
-            ]
-        return [{"event": "Local Festival", "location": "Central Square", "time": "All Day"}]
+        # Search Google News for local events
+        url = f"https://news.google.com/rss/search?q={city}+event&hl=en-IN&gl=IN&ceid=IN:en"
+        response = requests.get(url, timeout=10)
+        soup = BeautifulSoup(response.text, 'xml')
+        
+        events = []
+        items = soup.find_all('item', limit=3) # Limit to top 3 events
+        for item in items:
+            title = item.find('title').text
+            events.append({
+                "event": title,
+                "location": city,
+                "time": item.find('pubDate').text if item.find('pubDate') else "Recent"
+            })
+            
+        return events
     except Exception as e:
         logger.error(f"Event scraping failed for {city}: {str(e)}")
         return []

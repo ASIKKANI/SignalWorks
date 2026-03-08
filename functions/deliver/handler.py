@@ -3,21 +3,22 @@ import os
 import boto3
 import logging
 from datetime import datetime
-from shared.constants import DATA_LAKE_BUCKET, PINPOINT_APP_ID, SUPPORTED_LANGUAGES
+from twilio.rest import Client
+from shared.constants import DATA_LAKE_BUCKET, SUPPORTED_LANGUAGES, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER
 
 # Configure logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-pinpoint = boto3.client('pinpoint', region_name='us-east-1')
+# Initialize Twilio Client
+twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
 translate = boto3.client('translate', region_name='us-east-1')
 s3 = boto3.client('s3')
 
 # Mock Vendor Data
 MOCK_VENDORS = [
-    {"id": "V001", "name": "Bharani", "city": "Chennai", "area": "Kelambakkam", "phone": "+919345588995", "lang": "Tamil"},
-    {"id": "V002", "name": "Rajesh", "city": "Mumbai", "phone": "+919999999901", "lang": "Hindi"},
-    {"id": "V003", "name": "Anbu", "city": "Chennai", "phone": "+919999999902", "lang": "Tamil"}
+    {"id": "V001", "name": "Bharani", "city": "Chennai", "area": "Kelambakkam", "phone": "+919345588995", "lang": "Tamil"}
 ]
 
 def translate_message(text, target_lang_name):
@@ -45,30 +46,19 @@ def translate_message(text, target_lang_name):
 
 def send_sms(phone, message):
     """
-    Sends SMS using Amazon Pinpoint.
+    Sends SMS using Twilio.
     """
     try:
-        if os.environ.get('AWS_EXECUTION_ENV'):
-            response = pinpoint.send_messages(
-                ApplicationId=PINPOINT_APP_ID,
-                MessageRequest={
-                    'Addresses': {
-                        phone: {'ChannelType': 'SMS'}
-                    },
-                    'MessageConfiguration': {
-                        'SMSMessage': {
-                            'Body': message,
-                            'MessageType': 'PROMOTIONAL'
-                        }
-                    }
-                }
-            )
-            return response
-        else:
-            logger.info(f"Local test: SMS sent to {phone} -> {message}")
-            return {"Status": "Simulated Success"}
+        # Use Twilio to send the message regardless of the environment now that we have keys!
+        message_res = twilio_client.messages.create(
+            body=message,
+            from_=TWILIO_PHONE_NUMBER,
+            to=phone
+        )
+        logger.info(f"Twilio SMS sent successfully. SID: {message_res.sid}")
+        return {"Status": "Success", "SID": message_res.sid}
     except Exception as e:
-        logger.error(f"Pinpoint failed: {str(e)}")
+        logger.error(f"Twilio failed: {str(e)}")
         return None
 
 def lambda_handler(event, context):

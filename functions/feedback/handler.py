@@ -25,7 +25,7 @@ def update_demand_heatmap(city, location, sales_status):
     logger.info(f"Updating heatmap for {location} in {city} with weight {weight}")
     
     try:
-        # Only use DynamoDB if we are specifically in a cloud env and table exists
+        # Use DynamoDB if we are specifically in a cloud env
         if os.environ.get('AWS_EXECUTION_ENV') and not os.environ.get('FORCE_LOCAL'):
             table = dynamodb.Table(HEATMAP_TABLE)
             table.update_item(
@@ -69,9 +69,19 @@ def lambda_handler(event, context):
         timestamp = datetime.now().isoformat()
         
         # 1. Store Feedback for Audit/History
-        if os.environ.get('AWS_EXECUTION_ENV'):
-            # In real AWS, we'd use dynamodb.Table(FEEDBACK_TABLE).put_item(...)
-            pass
+        if os.environ.get('AWS_EXECUTION_ENV') and not os.environ.get('FORCE_LOCAL'):
+            feedback_table = dynamodb.Table(FEEDBACK_TABLE)
+            feedback_table.put_item(
+                Item={
+                    'vendor_id': vendor_id,
+                    'timestamp': timestamp,
+                    'city': city,
+                    'location': location,
+                    'sales_status': sales_status
+                }
+            )
+        else:
+            logger.info(f"Local test: Feedback stored for {vendor_id} at {location} in {city}")
         
         # 2. Update the Demand Heatmap (The critical part for tomorrow's AI)
         success = update_demand_heatmap(city, location, sales_status)

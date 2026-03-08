@@ -27,8 +27,8 @@
 ## 5. Scheme Bot (New!)
 - [x] Set up Amazon Textract integration for OCR.
 - [x] Implement Doc-to-Advice logic with Claude 3 Haiku.
-- [ ] Create S3 trigger for automatic document processing.
+- [x] Create S3 trigger for automatic document processing.
 
 ## 6. Feedback Phase
-- [ ] DynamoDB schema for vendor location updates.
-- [ ] Demand heatmap update logic.
+- [x] DynamoDB schema for vendor location updates.
+- [x] Demand heatmap update logic.

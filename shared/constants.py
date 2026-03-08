@@ -5,13 +5,15 @@ CITIES = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Hyderabad", "Kolkata"]
 import os
 
 # API Keys (Loaded from environment variables for security)
-OPENWEATHER_API_KEY = os.environ.get("OPENWEATHER_API_KEY", "YOUR_KEY_HERE")
-GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY", "YOUR_KEY_HERE")
+OPENWEATHER_API_KEY = os.environ.get("OPENWEATHER_API_KEY", "")
+GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY", "")
 
-# AWS Config
+# AWS/Twilio Config
 DATA_LAKE_BUCKET = "signalworks-data-lake"
 BEDROCK_MODEL_ID = "anthropic.claude-3-haiku-20240307-v1:0"
-PINPOINT_APP_ID = "signalworks-pinpoint-app"
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "")
+TWILIO_PHONE_NUMBER = os.environ.get("TWILIO_PHONE_NUMBER", "")
 
 # Languages
 SUPPORTED_LANGUAGES = {
