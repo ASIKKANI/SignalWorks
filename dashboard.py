@@ -19,7 +19,8 @@ defaults = {
     'step2_done': False, 'step2_output': '',
     'step3_done': False, 'step3_output': '',
     'step4_done': False, 'step4_output': '',
-    'sms_text': ''
+    'sms_text': '',
+    'custom_phone': ''
 }
 for k, v in defaults.items():
     if k not in st.session_state:
@@ -249,6 +250,15 @@ with left:
 - 🔴 **Twilio** — SMS delivery to basic phone
     """)
     st.markdown(f"**Status:** {badge(st.session_state.step4_done)}")
+
+    st.session_state.custom_phone = st.text_input(
+        "📱 Send demo SMS to",
+        value=st.session_state.custom_phone,
+        placeholder="+91XXXXXXXXXX",
+        help="Enter any phone number (with country code) to receive the live SMS. Leave blank to use the default demo number.",
+        disabled=st.session_state.step4_done
+    )
+
     disabled = not st.session_state.step3_done
     if st.button("▶  Run Deliver Lambda", use_container_width=True, type="primary", key="btn4", disabled=disabled):
         # Build SMS preview text before calling
@@ -269,7 +279,10 @@ with left:
                 )
         with st.spinner("Lambda running — translating and sending via Twilio..."):
             from functions.deliver.handler import lambda_handler as deliver_handler
-            result = deliver_handler({}, None)
+            event_payload = {}
+            if st.session_state.custom_phone.strip():
+                event_payload["custom_phone"] = st.session_state.custom_phone.strip()
+            result = deliver_handler(event_payload, None)
             body = json.loads(result['body'])
             if result['statusCode'] == 200:
                 st.session_state.step4_done = True
@@ -295,7 +308,8 @@ with right:
         st.code(st.session_state.step4_output, language="bash")
 
     if st.session_state.step4_done and st.session_state.sms_text:
-        st.markdown("**📨 SMS Delivered to +918681980569**")
+        display_phone = st.session_state.custom_phone.strip() or "+918681980569"
+        st.markdown(f"**📨 SMS Delivered to {display_phone}**")
         st.markdown(
             f"""
             <div style="

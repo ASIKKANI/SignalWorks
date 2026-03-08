@@ -85,8 +85,12 @@ def lambda_handler(event, context):
         city_insights = {item['city']: item for item in insights_data['insights']}
 
         # 2. Iterate through vendors and deliver
+        # Allow a custom phone number to be injected via the event (e.g. from the dashboard demo)
+        custom_phone = event.get('custom_phone') if event else None
+        vendors = [dict(v, phone=custom_phone) for v in MOCK_VENDORS] if custom_phone else MOCK_VENDORS
+
         delivery_results = []
-        for vendor in MOCK_VENDORS:
+        for vendor in vendors:
             city = vendor['city']
             insight = city_insights.get(city)
             
