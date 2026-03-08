@@ -1,51 +1,78 @@
-# SignalWorks - "Morning Intelligence" for Bharat
+# 🚦 SignalWorks
+### Mandi in Your Pocket | AI Market Intelligence for the "Next Billion"
 
-SignalWorks is a serverless, AI-powered "Zero-UI" solution designed to empower Indian street vendors, farmers, and daily wage earners with hyper-localized, actionable intelligence. Delivered via SMS before 6:00 AM, it provides critical insights on weather, market demand, fair pricing, and government schemes, enabling them to make informed daily business decisions without requiring a smartphone or internet proficiency.
+[![Hackathon](https://img.shields.io/badge/Competition-AWS%20AI%20for%20Bharat-FF9900?style=for-the-badge&logo=amazonaws)](https://vision.hack2skill.com/event/ai-for-bharat)
+[![Status](https://img.shields.io/badge/Status-Prototype%20Ready-success?style=for-the-badge)]()
+[![Stack](https://img.shields.io/badge/Tech-Bedrock%20%7C%20SageMaker%20%7C%20Pinpoint-blue?style=for-the-badge&logo=python)]()
+[![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)]()
 
-## ☁️ Where AWS is Used
-The entire architecture is 100% serverless and built natively on AWS to ensure maximum scalability, high availability, and optimal cost-efficiency:
 
-*   **AWS Lambda**: Serverless compute running the core business logic across multiple discrete microservices (`ingest`, `predict`, `analyze`, `deliver`, `feedback`, `scheme_bot`).
-*   **Amazon DynamoDB**: Fast, NoSQL database used to store user profiles, locations, roles, and language preferences.
-*   **Amazon S3**: Acts as a Data Lake (`signalworks-data-lake`) to store ingested daily raw data (weather, Mandi prices, traffic).
-*   **Amazon EventBridge**: Used for scheduling the daily morning broadcast pipeline.
-*   **Amazon API Gateway**: To expose secure HTTP endpoints for onboarding, twilio webhooks, and the Scheme Bot interaction.
 
-## 🤖 AI on AWS: Tools & Usage
 
-### What AI Tools are Used?
-The project heavily relies on **Amazon Bedrock**, specifically using the **Anthropic Claude 3 Haiku** foundation model (`anthropic.claude-3-haiku-20240307-v1:0`), due to its speed, affordability, and excellent multilingual capabilities.
 
-### Why is AI Used in this Project?
-Handling the diverse unstructured realities of the Indian informal economy requires an intelligence layer that standard code cannot provide. AI is used to:
-1.  **Synthesize Complex Data**: Transforming raw JSON from weather APIs and Mandi agricultural price boards into a cohesive, conversational summary.
-2.  **Hyper-Personalization**: Generating insights specific to a user's role (e.g., advising a mango vendor differently than a cotton farmer) and their exact location.
-3.  **Language Localization**: Instantly translating complex agricultural/business advice into the user's preferred regional language (Hindi, Tamil, Telugu, Kannada) directly using LLM translation capabilities.
-4.  **Sentiment & Intent Analysis**: Processing incoming unstructured feedback via SMS to determine if a user found the insight helpful, or identifying when a user is specifically asking a question about government incentives.
+> **"A ₹1,000 feature phone that tells a vegetable vendor exactly *where* and *when* to sell."**
 
-## 🔄 System Workflow & Architecture
+<video src="https://github.com/user-attachments/assets/4e68f47f-5477-4195-928e-c792b4aaec3a" width="100%" controls autoplay loop muted></video>
 
-The system operates through an automated pipeline divided into several decoupled Lambda functions:
+---
 
-### 1. Ingestion (`ingest`)
-*   **Action**: New users are onboarded into the platform. Their data (Phone Number, Role, City, Language Preference) is saved into **Amazon DynamoDB**.
+## 📂 Submission Documents
+**Judges, start here:**
+* 📜 **[Requirements Spec](requirements.md)** → User Stories, Functional Requirements & "EARS" Syntax.
+* 🏗️ **[System Architecture](design.md)** → AWS Serverless Design, Data Schema & Correctness Properties.
+* ✅ **[Execution Roadmap](tasks.md)** → Phased Implementation Plan (MVP to Production).
 
-### 2. Prediction / Data Gathering (`predict`)
-*   **Action**: Triggered early in the morning via **EventBridge**, this phase fetches raw macro-environmental data.
-*   **Details**: It pulls 5-day weather forecasts from OpenWeather and agricultural prices from Agmarknet, transforming this data and dumping it into the **Amazon S3 Data Lake** for the day.
+---
 
-### 3. AI Analysis (`analyze`)
-*   **Action**: Consolidates user profiles and the daily environmental data to generate insights.
-*   **Details**: Reads the user profiles from DynamoDB and the daily weather/market conditions from S3. It passes this context into **Amazon Bedrock (Claude 3)** with a prompt instructing it to act as an expert agricultural business advisor. The AI outputs a tailored Action Plan for the day (e.g., "Heavy rain expected by 2 PM, sell perishables early or arrange tarpaulins").
+## 🛑 The Problem: "Triple Uncertainty"
+India's **10 Million+ street vendors** operate on gut feeling, facing three daily risks:
+1.  📍 **Spatial:** "Where is the crowd today?" (Temple? Stadium? Metro?)
+2.  ⏰ **Temporal:** "When should I be there?" (Morning rush vs. Evening rain?)
+3.  💰 **Pricing:** "What is the fair price?" (Exploitation by middlemen.)
 
-### 4. Zero-UI Delivery (`deliver`)
-*   **Action**: Sends the insight to the user's basic mobile phone.
-*   **Details**: Takes the English AI insight generated in the Analyze step and uses **Amazon Bedrock** again to accurately translate it into the user's native tongue. It then interfaces with **Twilio** (or Amazon Pinpoint/SNS) to dispatch the insight as a standard SMS text message.
+Most "Smart City" apps fail because **vendors don't have smartphones or data plans.**
 
-### 5. Continuous Feedback (`feedback`)
-*   **Action**: Users can reply to the SMS to share ground truth or rate the prediction.
-*   **Details**: The webhook triggers a Lambda function that uses **Amazon Bedrock** to run sentiment analysis on the reply. If the AI detects an issue (e.g., "The price was actually much lower"), this ground-truth data is logged to refine future AI system prompts.
+## 💡 The Solution: SignalWorks
+We don't build an app. We build a **Decision Engine** accessible via **2G**.
 
-### 6. Interactive Scheme Bot (`scheme_bot`)
-*   **Action**: A conversational SMS bot helping farmers discover government benefits.
-*   **Details**: If a user texts a query like "Am I eligible for PM-Kisan?", this Lambda triggers, retrieves their profile from DynamoDB, and uses **Amazon Bedrock** to cross-reference their profile with government scheme guidelines, replying instantly via SMS in their native language.
+* **Zero-UI Interface:** Works entirely via **SMS** and **Voice Call (IVR)**.
+* **Hyper-Local Intelligence:** Aggregates City Events, Traffic, and Weather to create a "Revenue Heatmap."
+* **AI-Powered:** Uses **Amazon Bedrock (Claude 3)** to reason ("Go to the stadium because the match ends at 5 PM") and **SageMaker** to predict fair pricing.
+
+---
+
+## 🏗️ Architecture
+**Event-Driven Serverless Architecture on AWS**
+
+Architecture Diagram<img width="1218" height="610" alt="architecture" src="https://github.com/user-attachments/assets/767841cb-8f1f-4f41-b5f9-6b8d52cd4278" />
+
+
+* **Intelligence:** Amazon Bedrock (Reasoning) + SageMaker Canvas (Forecasting).
+* **Inclusion:** Amazon Pinpoint (SMS) + Amazon Connect (Voice/IVR).
+* **Scale:** AWS Lambda (Compute) + DynamoDB (Data) + EventBridge (Orchestration).
+
+---
+
+## 🚀 Key Features
+| Feature | Tech Stack | Impact |
+| :--- | :--- | :--- |
+| **"Golden Hour" Alerts** | Amazon Pinpoint | Proactive SMS telling vendors exactly where to go. |
+| **Voice Query (IVR)** | Amazon Connect + Polly | "Ask anything" in Hindi/Tamil/Telugu dialects. |
+| **Fair Price Engine** | SageMaker Canvas | Prevents underselling by predicting daily Mandi rates. |
+| **Scheme Bot (RAG)** | Bedrock Knowledge Base | Helps vendors apply for PM SVANidhi loans via SMS. |
+| **Offline Mode** | DynamoDB | Store-and-forward logic for zero-signal zones. |
+
+---
+
+## 👥 Team: Radioheads
+
+| Name | Role | Hack2Skill ID / Reg ID |
+| :--- | :--- | :--- |
+| **Asik Kani** | Lead Architect | ASIKKANI |
+| **Kruthi GR** | Front-end  | Kruthi GR |
+| **Bharani dharan** | backend | bharani dharan.R |
+
+
+---
+
+*Built with ❤️ for Bharat using AWS.*
