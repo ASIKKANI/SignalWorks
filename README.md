@@ -2,7 +2,7 @@
 ### Mandi in Your Pocket | AI Market Intelligence for the "Next Billion"
 
 [![Hackathon](https://img.shields.io/badge/Competition-AWS%20AI%20for%20Bharat-FF9900?style=for-the-badge&logo=amazonaws)](https://vision.hack2skill.com/event/ai-for-bharat)
-[![Status](https://img.shields.io/badge/Status-Prototype%20Ready-success?style=for-the-badge)]()
+[![Status](https://img.shields.io/badge/Status-Prototype%20Ready-success?style=for-the-badge)]() 
 [![Stack](https://img.shields.io/badge/Tech-Bedrock%20%7C%20SageMaker%20%7C%20Pinpoint-blue?style=for-the-badge&logo=python)]()
 [![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)]()
 
