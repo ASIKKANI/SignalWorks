@@ -13,7 +13,7 @@
 > **"A ₹1,000 feature phone that tells a vegetable vendor exactly *where* and *when* to sell."**
 
 <video src="https://github.com/user-attachments/assets/4e68f47f-5477-4195-928e-c792b4aaec3a" width="100%" controls autoplay loop muted></video>
-
+   
 ---
 
 ## 📂 Submission Documents
